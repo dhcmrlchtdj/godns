@@ -11,6 +11,7 @@ GOFLAGS := -buildvcs=false -buildmode=pie -mod=readonly -trimpath -ldflags="-w -
 .PHONY: dev build fmt lint test clean outdated upgrade
 
 build:
+	go mod download
 	CGO_ENABLED=0 go build $(GOFLAGS) -o _build/ ./cmd/...
 
 dev:

@@ -5,8 +5,10 @@ modules-download-mode = "readonly"
 
 [output]
 sort-results = true
-uniq-by-line = false
 print-linter-name = true
+
+[issues]
+uniq-by-line = false
 
 [linters]
 presets = [
