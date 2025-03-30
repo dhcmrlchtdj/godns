@@ -36,12 +36,12 @@ func (s *DnsServer) cacheGet(ctx context.Context, key string) ([]dns.RR, error) 
 
 	cached, err := deferred.Wait()
 	if err != nil {
-		var errRcode client.ErrDnsResponse
+		var errRcode client.DnsResponseError
 		if errors.As(err, errRcode) {
 			s.cache.Delete(key)
 			logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")
 		}
-		return nil, err
+		return nil, err // nolint: wrapcheck
 	}
 
 	sec := math.Ceil(time.Until(cached.expired).Seconds())
@@ -132,7 +132,7 @@ func (s *DnsServer) cacheReject(ctx context.Context, key string, rcode int) {
 		return
 	}
 
-	deferred.Reject(client.ErrDnsResponse{Rcode: rcode})
+	deferred.Reject(client.DnsResponseError{Rcode: rcode})
 	logger.Trace().Msg("rejected")
 
 	logger.Trace().Str("rcode", dns.RcodeToString[rcode]).Msg("rcode")
@@ -165,7 +165,7 @@ func (s *DnsServer) cleanupExpiredCache() {
 
 				cached, err := deferred.Wait()
 				if err != nil {
-					var errRcode client.ErrDnsResponse
+					var errRcode client.DnsResponseError
 					if errors.As(err, errRcode) {
 						s.cache.Delete(key)
 						logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")

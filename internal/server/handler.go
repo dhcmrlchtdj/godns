@@ -75,7 +75,7 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 	cacheKey := question.String()
 	answer, err := s.cacheGet(ctx, cacheKey)
 	if err != nil {
-		var errRcode client.ErrDnsResponse
+		var errRcode client.DnsResponseError
 		if errors.As(err, &errRcode) {
 			reply.Rcode = errRcode.Rcode
 		} else {
@@ -117,7 +117,7 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 		logger.Trace().Msg("resolved")
 		s.cacheResolve(ctx, cacheKey, ans)
 	} else {
-		var errRcode client.ErrDnsResponse
+		var errRcode client.DnsResponseError
 		if errors.As(err, &errRcode) {
 			reply.Rcode = errRcode.Rcode
 			logger.Debug().

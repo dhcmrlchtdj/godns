@@ -12,15 +12,13 @@ import (
 )
 
 type ChinaList struct {
-	ctx        context.Context
 	httpClient *http.Client
 }
 
 const CHINA_LIST_URL = "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf"
 
-func MakeChinaList(ctx context.Context, proxy string) *ChinaList {
+func MakeChinaList(proxy string) *ChinaList {
 	chinaList := ChinaList{
-		ctx:        ctx,
 		httpClient: new(http.Client),
 	}
 
@@ -37,13 +35,13 @@ func MakeChinaList(ctx context.Context, proxy string) *ChinaList {
 	return &chinaList
 }
 
-func (c *ChinaList) Fetch() ([]string, error) {
-	logger := zerolog.Ctx(c.ctx).
+func (c *ChinaList) Fetch(ctx context.Context) ([]string, error) {
+	logger := zerolog.Ctx(ctx).
 		With().
 		Str("module", "china_list").
 		Logger()
 
-	req, err := http.NewRequestWithContext(c.ctx, "GET", CHINA_LIST_URL, http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, CHINA_LIST_URL, http.NoBody)
 	if err != nil {
 		err = errors.WithStack(err)
 		logger.Error().Err(err).Msg("failed to create request")
@@ -59,7 +57,7 @@ func (c *ChinaList) Fetch() ([]string, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
+	if resp.StatusCode != http.StatusOK {
 		err = errors.WithStack(err)
 		logger.Error().Err(err).Int("StatusCode", resp.StatusCode).Msg("StatusCode")
 		return nil, err

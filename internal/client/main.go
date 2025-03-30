@@ -14,7 +14,7 @@ type DnsResolver interface {
 	Resolve(ctx context.Context, question dns.Question, dnssec bool) ([]dns.RR, error)
 }
 
-var resolverCache = shardmap.New[string, DnsResolver](8)
+var resolverCache = shardmap.New[string, DnsResolver](8) // nolint: gochecknoglobals
 
 func GetByUpstream(ctx context.Context, upstream *config.Upstream) DnsResolver {
 	if upstream == nil {

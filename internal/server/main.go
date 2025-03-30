@@ -24,7 +24,7 @@ type DnsServer struct {
 	dnsServer     *dns.Server
 	pprofServer   *http.Server
 	pprofListener net.Listener
-	ctx           context.Context
+	ctx           context.Context // nolint: containedctx
 	router        *router
 	cache         *shardmap.Map[string, *deferredAnswer]
 	Config        config.Config
@@ -195,6 +195,6 @@ func (s *DnsServer) shutdownPprof() {
 
 type LogIdHook struct{}
 
-func (h LogIdHook) Run(e *zerolog.Event, _ zerolog.Level, _ string) {
+func (LogIdHook) Run(e *zerolog.Event, _ zerolog.Level, _ string) {
 	e.Str("logId", xid.New().String())
 }

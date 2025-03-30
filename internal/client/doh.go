@@ -53,14 +53,14 @@ func (s *Doh) Resolve(ctx context.Context, question dns.Question, dnssec bool) (
 		Str("record", dns.TypeToString[question.Qtype]).
 		Logger()
 
-	req, err := http.NewRequestWithContext(ctx, "GET", s.server, http.NoBody)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.server, http.NoBody)
 	if err != nil {
 		err = errors.WithStack(err)
 		logger.Error().Stack().Err(err).Msg("failed to create request")
 		return nil, err
 	}
 
-	req.Header.Set("accept", "application/dns-json")
+	req.Header.Set("Accept", "application/dns-json")
 	q := req.URL.Query()
 	q.Set("name", question.Name)                    // Query Name
 	q.Set("type", dns.TypeToString[question.Qtype]) // Query Type
@@ -89,7 +89,7 @@ func (s *Doh) Resolve(ctx context.Context, question dns.Question, dnssec bool) (
 		logger.Debug().
 			Str("rcode", dns.RcodeToString[r.Status]).
 			Msg("failed to resolve")
-		return nil, ErrDnsResponse{Rcode: r.Status}
+		return nil, DnsResponseError{Rcode: r.Status}
 	}
 
 	answers := []dns.RR{}

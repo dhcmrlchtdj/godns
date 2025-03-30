@@ -41,7 +41,7 @@ func (r *router) addRules(ctx context.Context, rules []*config.Rule, serverStart
 	for priority, rule := range rules {
 		if rule.Pattern.Builtin == "china-list" {
 			if serverStarted {
-				suffix, err := util.MakeChinaList(ctx, rule.Pattern.BuiltinProxy).Fetch()
+				suffix, err := util.MakeChinaList(rule.Pattern.BuiltinProxy).Fetch(ctx)
 				if err == nil {
 					for _, domain := range suffix {
 						r.addDomain(ctx, priority, domain, true, rule.Pattern.Record, &rule.Upstream)
@@ -168,7 +168,7 @@ func (node *routerNode) searchSegments(segments []string) (int, *routerMatched) 
 	curr := node
 	longestMatch := 0
 	segmentCount := 0
-	var matched *routerMatched = curr.matched
+	matched := curr.matched
 	for _, segment := range segments {
 		if curr.next == nil {
 			break

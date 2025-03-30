@@ -2,10 +2,10 @@ package client
 
 import "github.com/miekg/dns"
 
-type ErrDnsResponse struct {
+type DnsResponseError struct {
 	Rcode int
 }
 
-func (e ErrDnsResponse) Error() string {
+func (e DnsResponseError) Error() string {
 	return dns.RcodeToString[e.Rcode]
 }

@@ -28,5 +28,5 @@ func (*BlockByNxdomain) Resolve(ctx context.Context, question dns.Question, dnss
 		Str("domain", question.Name).
 		Str("record", dns.TypeToString[question.Qtype]).
 		Msg("resolved")
-	return nil, ErrDnsResponse{Rcode: dns.RcodeNameError}
+	return nil, DnsResponseError{Rcode: dns.RcodeNameError}
 }

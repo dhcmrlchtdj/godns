@@ -1,0 +1,85 @@
+{
+	"version": "2",
+	"linters": {
+		"default": "all",
+		"disable": [
+			"cyclop",
+			"depguard",
+			"dupl",
+			"exhaustruct",
+			"funlen",
+			"gocognit",
+			"gocyclo",
+			"godox",
+			"ireturn",
+			"lll",
+			"mnd",
+			"nestif",
+			"nlreturn",
+			"nolintlint",
+			"tagliatelle",
+			"varnamelen",
+			"wsl"
+		],
+		"exclusions": {
+			"generated": "strict",
+			"presets": [
+				"comments",
+				"common-false-positives",
+				"legacy",
+				"std-error-handling"
+			]
+		},
+		"settings": {
+			"errcheck": {
+				"check-blank": true,
+				"check-type-assertions": true
+			},
+			"revive": {
+				"enable-all-rules": true,
+				"rules": [
+					{ "name": "add-constant", "disabled": true },
+					{ "name": "cognitive-complexity", "disabled": true },
+					{ "name": "comment-spacings", "disabled": true },
+					{ "name": "cyclomatic", "disabled": true },
+					{ "name": "flag-parameter", "disabled": true },
+					{ "name": "function-length", "disabled": true },
+					{ "name": "indent-error-flow", "disabled": true },
+					{ "name": "line-length-limit", "disabled": true },
+					{ "name": "nested-structs", "disabled": true },
+					{ "name": "unused-parameter", "disabled": true },
+					{ "name": "var-naming", "disabled": true }
+				]
+			},
+			"gocritic": {
+				"disabled-checks": [
+					"commentedOutCode",
+					"ifElseChain",
+					"paramTypeCombine",
+					"sprintfQuotedString",
+					"unnamedResult",
+					"whyNoLint"
+				],
+				"enabled-tags": [
+					"diagnostic",
+					"style",
+					"performance",
+					"experimental",
+					"opinionated"
+				]
+			},
+			"govet": {
+				"enable-all": true
+			}
+		}
+	},
+	"issues": {
+		"uniq-by-line": false
+	},
+	"output": {},
+	"run": {
+		"timeout": "5m",
+		"tests": true,
+		"modules-download-mode": "readonly"
+	}
+}
