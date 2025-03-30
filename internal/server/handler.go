@@ -73,9 +73,14 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 
 	// from cache
 	cacheKey := question.String()
-	answer, rcode := s.cacheGet(ctx, cacheKey)
-	if rcode != nil {
-		reply.Rcode = *rcode
+	answer, err := s.cacheGet(ctx, cacheKey)
+	if err != nil {
+		var errRcode client.ErrDnsResponse
+		if errors.As(err, &errRcode) {
+			reply.Rcode = errRcode.Rcode
+		} else {
+			reply.Rcode = dns.RcodeServerFailure
+		}
 		logger.Trace().Msg("from cache")
 		return
 	} else if answer != nil {
@@ -84,7 +89,7 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 		return
 	}
 
-	deferred := util.MakeDeferred[cachedAnswer, int]()
+	deferred := util.MakeDeferred[cachedAnswer]()
 	s.cacheSet(ctx, cacheKey, deferred)
 
 	upstream := s.router.search(ctx, question.Name, question.Qtype)
@@ -112,7 +117,7 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 		logger.Trace().Msg("resolved")
 		s.cacheResolve(ctx, cacheKey, ans)
 	} else {
-		var errRcode *client.ErrDnsResponse
+		var errRcode client.ErrDnsResponse
 		if errors.As(err, &errRcode) {
 			reply.Rcode = errRcode.Rcode
 			logger.Debug().

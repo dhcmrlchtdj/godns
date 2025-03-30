@@ -6,8 +6,10 @@ import (
 	"time"
 
 	"github.com/miekg/dns"
+	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 
+	"github.com/dhcmrlchtdj/godns/internal/client"
 	"github.com/dhcmrlchtdj/godns/internal/util"
 )
 
@@ -15,11 +17,11 @@ type cachedAnswer struct {
 	expired time.Time
 	answer  []dns.RR
 }
-type deferredAnswer = util.Deferred[cachedAnswer, int]
+type deferredAnswer = util.Deferred[cachedAnswer]
 
 ///
 
-func (s *DnsServer) cacheGet(ctx context.Context, key string) ([]dns.RR, *int) {
+func (s *DnsServer) cacheGet(ctx context.Context, key string) ([]dns.RR, error) {
 	logger := zerolog.Ctx(ctx).
 		With().
 		Str("module", "server.cache.get").
@@ -32,11 +34,14 @@ func (s *DnsServer) cacheGet(ctx context.Context, key string) ([]dns.RR, *int) {
 		return nil, nil
 	}
 
-	cached, rcode := deferred.Wait()
-	if rcode != nil {
-		s.cache.Delete(key)
-		logger.Trace().Str("rcode", dns.RcodeToString[*rcode]).Msg("rcode")
-		return nil, rcode
+	cached, err := deferred.Wait()
+	if err != nil {
+		var errRcode client.ErrDnsResponse
+		if errors.As(err, errRcode) {
+			s.cache.Delete(key)
+			logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")
+		}
+		return nil, err
 	}
 
 	sec := math.Ceil(time.Until(cached.expired).Seconds())
@@ -109,7 +114,7 @@ func (s *DnsServer) cacheResolve(ctx context.Context, key string, answer []dns.R
 		answer:  answer,
 		expired: time.Now().Add(time.Duration(ttl) * time.Second),
 	}
-	deferred.Resolve(&ans)
+	deferred.Resolve(ans)
 
 	logger.Trace().Uint32("TTL", ttl).Msg("resolved")
 }
@@ -127,7 +132,7 @@ func (s *DnsServer) cacheReject(ctx context.Context, key string, rcode int) {
 		return
 	}
 
-	deferred.Reject(&rcode)
+	deferred.Reject(client.ErrDnsResponse{Rcode: rcode})
 	logger.Trace().Msg("rejected")
 
 	logger.Trace().Str("rcode", dns.RcodeToString[rcode]).Msg("rcode")
@@ -158,10 +163,13 @@ func (s *DnsServer) cleanupExpiredCache() {
 					continue
 				}
 
-				cached, rcode := deferred.Wait()
-				if rcode != nil {
-					s.cache.Delete(key)
-					logger.Trace().Str("rcode", dns.RcodeToString[*rcode]).Msg("rcode")
+				cached, err := deferred.Wait()
+				if err != nil {
+					var errRcode client.ErrDnsResponse
+					if errors.As(err, errRcode) {
+						s.cache.Delete(key)
+						logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")
+					}
 				}
 
 				sec := math.Ceil(time.Until(cached.expired).Seconds())

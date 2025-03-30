@@ -89,7 +89,7 @@ func (s *Doh) Resolve(ctx context.Context, question dns.Question, dnssec bool) (
 		logger.Debug().
 			Str("rcode", dns.RcodeToString[r.Status]).
 			Msg("failed to resolve")
-		return nil, &ErrDnsResponse{Rcode: r.Status}
+		return nil, ErrDnsResponse{Rcode: r.Status}
 	}
 
 	answers := []dns.RR{}

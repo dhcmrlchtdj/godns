@@ -6,6 +6,6 @@ type ErrDnsResponse struct {
 	Rcode int
 }
 
-func (e *ErrDnsResponse) Error() string {
+func (e ErrDnsResponse) Error() string {
 	return dns.RcodeToString[e.Rcode]
 }
