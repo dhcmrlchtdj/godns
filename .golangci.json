@@ -73,6 +73,14 @@
 			}
 		}
 	},
+	"formatters": {
+		"enable": ["gofmt", "gofumpt", "goimports"],
+		"settings": {
+			"goimports": {
+				"local-prefixes": ["github.com/dhcmrlchtdj/godns"]
+			}
+		}
+	},
 	"issues": {
 		"uniq-by-line": false
 	},

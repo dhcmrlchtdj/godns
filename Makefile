@@ -23,8 +23,9 @@ dev:
 		jq -R '. as $$line | try fromjson catch $$line'
 
 fmt:
-	gopls format -w **/*.go
-	gofumpt -w .
+	golangci-lint fmt
+	# gopls format -w **/*.go
+	# gofumpt -w .
 
 lint:
 	golangci-lint run
