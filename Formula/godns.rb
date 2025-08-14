@@ -7,6 +7,7 @@ class Godns < Formula
   depends_on "go" => :build
 
   def install
+    ENV["GOEXPERIMENT"] = "greenteagc,jsonv2"
     system "go", "build", *std_go_args, "./cmd/godns"
     (etc/"godns").mkpath
     etc.install "aur/config.json" => "godns/config.json"

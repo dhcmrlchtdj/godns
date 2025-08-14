@@ -16,10 +16,12 @@
 			"mnd",
 			"nestif",
 			"nlreturn",
+			"noinlineerr",
 			"nolintlint",
 			"tagliatelle",
 			"varnamelen",
-			"wsl"
+			"wsl",
+			"wsl_v5"
 		],
 		"exclusions": {
 			"generated": "strict",

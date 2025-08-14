@@ -17,7 +17,7 @@ type cachedAnswer struct {
 	expired time.Time
 	answer  []dns.RR
 }
-type deferredAnswer = util.Deferred[cachedAnswer]
+type deferredAnswer = util.Deferred[*cachedAnswer]
 
 ///
 
@@ -114,7 +114,7 @@ func (s *DnsServer) cacheResolve(ctx context.Context, key string, answer []dns.R
 		answer:  answer,
 		expired: time.Now().Add(time.Duration(ttl) * time.Second),
 	}
-	deferred.Resolve(ans)
+	deferred.Resolve(&ans)
 
 	logger.Trace().Uint32("TTL", ttl).Msg("resolved")
 }

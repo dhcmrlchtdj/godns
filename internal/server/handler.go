@@ -89,7 +89,7 @@ func (s *DnsServer) query(ctx context.Context, reply *dns.Msg) {
 		return
 	}
 
-	deferred := util.MakeDeferred[cachedAnswer]()
+	deferred := util.MakeDeferred[*cachedAnswer]()
 	s.cacheSet(ctx, cacheKey, deferred)
 
 	upstream := s.router.search(ctx, question.Name, question.Qtype)

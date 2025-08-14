@@ -91,7 +91,7 @@ func (s *DnsServer) SetupPprof() {
 			return s.ctx
 		},
 	}
-	netListener, err := net.Listen("tcp", s.Config.Host+":0")
+	netListener, err := net.Listen("tcp", s.Config.Host+":0") // nolint: noctx
 	if err != nil {
 		zerolog.Ctx(s.ctx).
 			Error().
