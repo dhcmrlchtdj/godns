@@ -106,22 +106,21 @@ func (s *DnsServer) SetupPprof() {
 
 func (s *DnsServer) Start() {
 	var wg sync.WaitGroup
-	wg.Add(3)
 
-	go func() {
+	wg.Go(func() {
 		s.cleanupExpiredCache()
 		wg.Done()
-	}()
+	})
 
-	go func() {
+	wg.Go(func() {
 		s.startDNS()
 		wg.Done()
-	}()
+	})
 
-	go func() {
+	wg.Go(func() {
 		s.startPprof()
 		wg.Done()
-	}()
+	})
 
 	wg.Wait()
 }
