@@ -37,7 +37,7 @@ func (s *DnsServer) cacheGet(ctx context.Context, key string) ([]dns.RR, error) 
 	cached, err := deferred.Wait()
 	if err != nil {
 		var errRcode client.DnsResponseError
-		if errors.As(err, errRcode) {
+		if errors.As(err, &errRcode) {
 			s.cache.Delete(key)
 			logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")
 		}
@@ -166,7 +166,7 @@ func (s *DnsServer) cleanupExpiredCache() {
 				cached, err := deferred.Wait()
 				if err != nil {
 					var errRcode client.DnsResponseError
-					if errors.As(err, errRcode) {
+					if errors.As(err, &errRcode) {
 						s.cache.Delete(key)
 						logger.Trace().Str("rcode", dns.RcodeToString[errRcode.Rcode]).Msg("rcode")
 					}
