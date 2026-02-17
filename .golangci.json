@@ -40,17 +40,54 @@
 			"revive": {
 				"enable-all-rules": true,
 				"rules": [
-					{ "name": "add-constant", "disabled": true },
-					{ "name": "cognitive-complexity", "disabled": true },
-					{ "name": "comment-spacings", "disabled": true },
-					{ "name": "cyclomatic", "disabled": true },
-					{ "name": "flag-parameter", "disabled": true },
-					{ "name": "function-length", "disabled": true },
-					{ "name": "indent-error-flow", "disabled": true },
-					{ "name": "line-length-limit", "disabled": true },
-					{ "name": "nested-structs", "disabled": true },
-					{ "name": "unused-parameter", "disabled": true },
-					{ "name": "var-naming", "disabled": true }
+					{
+						"name": "deep-exit",
+						"disabled": true
+					},
+					{
+						"name": "add-constant",
+						"disabled": true
+					},
+					{
+						"name": "cognitive-complexity",
+						"disabled": true
+					},
+					{
+						"name": "comment-spacings",
+						"disabled": true
+					},
+					{
+						"name": "cyclomatic",
+						"disabled": true
+					},
+					{
+						"name": "flag-parameter",
+						"disabled": true
+					},
+					{
+						"name": "function-length",
+						"disabled": true
+					},
+					{
+						"name": "indent-error-flow",
+						"disabled": true
+					},
+					{
+						"name": "line-length-limit",
+						"disabled": true
+					},
+					{
+						"name": "nested-structs",
+						"disabled": true
+					},
+					{
+						"name": "unused-parameter",
+						"disabled": true
+					},
+					{
+						"name": "var-naming",
+						"disabled": true
+					}
 				]
 			},
 			"gocritic": {
@@ -76,10 +113,16 @@
 		}
 	},
 	"formatters": {
-		"enable": ["gofmt", "gofumpt", "goimports"],
+		"enable": [
+			"gofmt",
+			"gofumpt",
+			"goimports"
+		],
 		"settings": {
 			"goimports": {
-				"local-prefixes": ["github.com/dhcmrlchtdj/godns"]
+				"local-prefixes": [
+					"github.com/dhcmrlchtdj/godns"
+				]
 			}
 		}
 	},

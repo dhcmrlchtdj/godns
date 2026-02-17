@@ -12,7 +12,7 @@ GOFLAGS := -buildvcs=false -buildmode=pie -mod=readonly -trimpath -ldflags="-w -
 
 build:
 	go mod download
-	GOEXPERIMENT=greenteagc,jsonv2 CGO_ENABLED=0 go build $(GOFLAGS) -o _build/ ./cmd/...
+	GOEXPERIMENT=jsonv2 CGO_ENABLED=0 go build $(GOFLAGS) -o _build/ ./cmd/...
 
 dev:
 	go run -race ./cmd/godns \

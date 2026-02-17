@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	"encoding/json"
+	"encoding/json/v2"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -79,7 +79,7 @@ func (s *Doh) Resolve(ctx context.Context, question dns.Question, dnssec bool) (
 	defer resp.Body.Close()
 
 	var r dohResponse
-	if err := json.NewDecoder(resp.Body).Decode(&r); err != nil {
+	if err := json.UnmarshalRead(resp.Body, &r); err != nil {
 		err = errors.WithStack(err)
 		logger.Error().Stack().Err(err).Msg("failed to parse response")
 		return nil, err

@@ -2,7 +2,7 @@ package config
 
 import (
 	"context"
-	"encoding/json"
+	"encoding/json/v2"
 	"os"
 
 	"github.com/rs/zerolog"
@@ -53,9 +53,7 @@ func (c *Config) LoadConfigFile(ctx context.Context, file string) {
 	}
 	defer f.Close()
 
-	dec := json.NewDecoder(f)
-	dec.UseNumber()
-	if err := dec.Decode(c); err != nil {
+	if err := json.UnmarshalRead(f, c, json.StringifyNumbers(true)); err != nil {
 		logger.Error().Stack().Err(err).Send()
 		panic(err)
 	}
