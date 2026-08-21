@@ -7,6 +7,7 @@
 			"depguard",
 			"dupl",
 			"exhaustruct",
+			"exhaustruct_v5",
 			"funlen",
 			"gocognit",
 			"gocyclo",
