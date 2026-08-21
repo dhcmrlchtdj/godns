@@ -53,7 +53,7 @@ func (c *Config) LoadConfigFile(ctx context.Context, file string) {
 	}
 	defer f.Close()
 
-	if err := json.UnmarshalRead(f, c, json.StringifyNumbers(true)); err != nil {
+	if err := json.UnmarshalRead(f, c); err != nil {
 		logger.Error().Stack().Err(err).Send()
 		panic(err)
 	}
